@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Claire on 11/25/17.
  */
-@Controller
+//@Controller
 public class IndexController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
