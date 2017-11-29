@@ -17,7 +17,6 @@ import java.util.List;
 public class IndexController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    @ResponseBody
     public String index() {
         return "index";
     }
