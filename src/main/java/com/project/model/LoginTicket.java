@@ -10,11 +10,10 @@ public class LoginTicket {
     private int ticketId;
     private int userId;
     private Date expired;
-    private int status;// 0 有效，-1 无效
+    private int status;// 0 有效，1 无效
     private String ticket;
 
-    public int getTicketId() {
-        return ticketId;
+    public LoginTicket() {
     }
 
     public LoginTicket(int userId) {
@@ -24,6 +23,10 @@ public class LoginTicket {
     public LoginTicket(int userId, int status) {
         this.userId = userId;
         this.status = status;
+    }
+
+    public int getTicketId() {
+        return ticketId;
     }
 
     public void setTicketId(int ticketId) {

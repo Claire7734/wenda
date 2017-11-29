@@ -18,13 +18,13 @@ public class LogAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
-    @Before("execution(* com.project.controller.IndexController.*(..))")
-    public void beforeMethod(JoinPoint joinPoint){
-        logger.info("before method");
-    }
-
-    @After("execution(* com.project.controller.IndexController.*(..))")
-    public void afterMethod(){
-        logger.info("after method");
-    }
+//    @Before("execution(* com.project.controller.IndexController.*(..))")
+//    public void beforeMethod(JoinPoint joinPoint){
+//        logger.info("before method");
+//    }
+//
+//    @After("execution(* com.project.controller.IndexController.*(..))")
+//    public void afterMethod(){
+//        logger.info("after method");
+//    }
 }

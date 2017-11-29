@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,12 +35,12 @@ public class LoginController {
         try {
             Map<String, String> map = userService.register(username, password);
             if (map.containsKey("ticket")) {
-                Cookie cookie = new Cookie("ticket",map.get("ticket"));
+                Cookie cookie = new Cookie("ticket", map.get("ticket"));
                 cookie.setPath("/");
                 response.addCookie(cookie);
                 return "redirect:/";
-            }else {
-                model.addAttribute("msg",map.get("msg"));
+            } else {
+                model.addAttribute("msg", map.get("msg"));
                 return "login";
             }
         } catch (Exception e) {
@@ -57,12 +58,12 @@ public class LoginController {
         try {
             Map<String, String> map = userService.login(username, password);
             if (map.containsKey("ticket")) {
-                Cookie cookie = new Cookie("ticket",map.get("ticket"));
+                Cookie cookie = new Cookie("ticket", map.get("ticket"));
                 cookie.setPath("/");
                 response.addCookie(cookie);
                 return "redirect:/";
-            }else {
-                model.addAttribute("msg",map.get("msg"));
+            } else {
+                model.addAttribute("msg", map.get("msg"));
                 return "login";
             }
         } catch (Exception e) {
@@ -71,8 +72,15 @@ public class LoginController {
         }
     }
 
-    @RequestMapping(path = "/reglogin", method = RequestMethod.GET)
-    public String register(Model model) {
+    @RequestMapping(path = {"/reglogin"}, method = {RequestMethod.GET})
+    public String regloginPage(Model model, @RequestParam(value = "next", required = false) String next) {
+        model.addAttribute("next", next);
         return "login";
+    }
+
+    @RequestMapping(path = "/logout", method = RequestMethod.GET)
+    public String logout(@CookieValue("ticket") String ticket) {
+        userService.logout(ticket);
+        return "redirect:/";
     }
 }
