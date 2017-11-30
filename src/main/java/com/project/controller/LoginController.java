@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.aspect.LogAspect;
 import com.project.service.UserService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class LoginController {
     public String register(Model model,
                            @RequestParam("username") String username,
                            @RequestParam("password") String password,
+                           @RequestParam(value = "next", required = false) String next,
                            HttpServletResponse response) {
         try {
             Map<String, String> map = userService.register(username, password);
@@ -38,6 +40,8 @@ public class LoginController {
                 Cookie cookie = new Cookie("ticket", map.get("ticket"));
                 cookie.setPath("/");
                 response.addCookie(cookie);
+                if (StringUtils.isNotBlank(next))
+                    return "redirect:" + next;
                 return "redirect:/";
             } else {
                 model.addAttribute("msg", map.get("msg"));
@@ -53,6 +57,7 @@ public class LoginController {
     public String login(Model model,
                         @RequestParam("username") String username,
                         @RequestParam("password") String password,
+                        @RequestParam(value = "next", required = false) String next,
                         @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
                         HttpServletResponse response) {
         try {
@@ -61,6 +66,8 @@ public class LoginController {
                 Cookie cookie = new Cookie("ticket", map.get("ticket"));
                 cookie.setPath("/");
                 response.addCookie(cookie);
+                if (StringUtils.isNotBlank(next))
+                    return "redirect:" + next;
                 return "redirect:/";
             } else {
                 model.addAttribute("msg", map.get("msg"));
