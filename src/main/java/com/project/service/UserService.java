@@ -48,6 +48,7 @@ public class UserService {
         user.setPassword(getMD5(password, salt));
         user.setHeadUrl("random picture");
         userDao.addUser(user);
+        user = userDao.selectByName(user.getName());
 
         String ticket = addLoginTicket(user.getUserId());
         map.put("ticket",ticket);
