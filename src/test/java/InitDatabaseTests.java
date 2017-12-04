@@ -31,7 +31,7 @@ public class InitDatabaseTests {
     @Test
     public void initDatabase() {
         Random random = new Random();
-        for (int i = 1; i < 20; i++) {
+        for (int i = 1; i < 10; i++) {
             User user = new User();
             user.setHeadUrl(String.format("/images/head.jpg", i));
             user.setName(String.format("USER-%d", i));
@@ -45,7 +45,7 @@ public class InitDatabaseTests {
             int a = userDao.updatePassword(user);
 
             Question question = new Question();
-            question.setCommentCount(i);
+            question.setCommentCount(0);
             Date date = new Date();
             date.setTime(date.getTime() + 1000*3600*i);
             question.setCreatedDate(date);

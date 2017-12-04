@@ -36,7 +36,7 @@ public class HomeController {
     @RequestMapping(path = {"/", "/index"}, method = RequestMethod.GET)
     public String index(Model model,
                         @RequestParam(value = "pop", defaultValue = "0") int pop) {
-        model.addAttribute("vos",getQuestions(1,0,10));
+        model.addAttribute("vos",getQuestions(0,0,10));//QuesionDao中做过判定，如果userId为0，返回所有；
         return "index";
     }
 
@@ -47,8 +47,8 @@ public class HomeController {
         return "index";
     }
 
-    private List<ViewObject> getQuestions(int userid, int offset, int limit){
-        List<Question> questionList = questionService.getLatestQuestions(userid, offset, limit);
+    private List<ViewObject> getQuestions(int userId, int offset, int limit){
+        List<Question> questionList = questionService.getLatestQuestions(userId, offset, limit);
         List<ViewObject> vos = new ArrayList<>();
         for (Question question:questionList){
             ViewObject vo = new ViewObject();

@@ -14,6 +14,14 @@ public class Question {
     private int userId;
     private int commentCount;
 
+    public Question() {
+    }
+
+    public Question(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
     public int getQuestionId() {
         return questionId;
     }

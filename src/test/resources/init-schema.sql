@@ -10,7 +10,7 @@ CREATE TABLE `user` (
 `head_url` VARCHAR(256) NOT NULL,
 PRIMARY KEY (user_id),
 UNIQUE KEY `name`(`name`)
-)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+)ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `question`;
 CREATE TABLE `question` (
@@ -19,7 +19,18 @@ CREATE TABLE `question` (
 `content` TEXT NULL,
 `user_id` INT NOT NULL,
 `created_date` DATETIME NOT NULL,
-`comment_count` INT NOT NULL,
+`comment_count` INT NOT NULL DEFAULT 0,
 PRIMARY KEY (`question_id`),
 INDEX `date_index` (`created_date` ASC)
-)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+)ENGINE=INNODB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `login_ticket`;
+CREATE TABLE `login_ticket` (
+  `ticket_id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `ticket` VARCHAR(45) NOT NULL,
+  `expired` DATETIME NOT NULL,
+  `status` INT NULL DEFAULT 0,
+  PRIMARY KEY (`ticket_id`),
+  UNIQUE INDEX `ticket_UNIQUE` (`ticket` ASC)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

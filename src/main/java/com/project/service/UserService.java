@@ -1,10 +1,14 @@
 package com.project.service;
 
+import com.project.aspect.LogAspect;
 import com.project.dao.LoginTicketDao;
 import com.project.dao.UserDao;
 import com.project.model.LoginTicket;
 import com.project.model.User;
+import com.project.util.WendaUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -19,11 +23,14 @@ import java.util.UUID;
  */
 @Service
 public class UserService {
+    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
     @Autowired
     UserDao userDao;
     @Autowired
     LoginTicketDao loginTicketDao;
+
+    public static String INIT_HEAD = "/images/head.jpg";
 
     int ticketValidTime = 3600 * 24 * 100;//ticket有效时间：100天（单位秒）
 
@@ -46,7 +53,7 @@ public class UserService {
         String salt = UUID.randomUUID().toString().substring(0, 5);
         user.setSalt(salt);
         user.setPassword(getMD5(password, salt));
-        user.setHeadUrl("random picture");
+        user.setHeadUrl(INIT_HEAD);
         userDao.addUser(user);
         user = userDao.selectByName(user.getName());
 
