@@ -14,12 +14,15 @@ public interface QuestionDao {
 
     String TABLE_NAME = "question";
     String INSERT_FIELDS = "title, content, created_date, user_id, comment_count";
-    String SELECT_FIELDS = "question_id" + INSERT_FIELDS;
+    String SELECT_FIELDS = "question_id," + INSERT_FIELDS;
 
 
     @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS, ") " +
             "values(#{title},#{content},#{createdDate},#{userId},#{commentCount})"})
     int addQuestion(Question question);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where question_id=#{questionId}"})
+    Question selectById(int questionId);
 
     List<Question> selectLatestQuestions(@Param("userId") int userId,
                                          @Param("offset") int offset,

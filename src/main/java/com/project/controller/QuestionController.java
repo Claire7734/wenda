@@ -4,11 +4,13 @@ import com.project.aspect.LogAspect;
 import com.project.dto.HostHolder;
 import com.project.model.Question;
 import com.project.service.QuestionService;
+import com.project.service.UserService;
 import com.project.util.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -22,6 +24,8 @@ public class QuestionController {
 
     @Autowired
     QuestionService questionService;
+    @Autowired
+    UserService userService;
 
     @Autowired
     HostHolder hostHolder;
@@ -48,5 +52,14 @@ public class QuestionController {
             logger.error("增加题目失败" + e.getMessage());
         }
         return WendaUtil.getJSONString(1, "失败");
+    }
+
+    @RequestMapping("/question/{questionId}")
+    public String questionDetail(@PathVariable int questionId,
+                                Model model) {
+        Question question = questionService.selectById(questionId);
+        model.addAttribute("question", question);
+        model.addAttribute("user", userService.getUser(question.getUserId()));
+        return "detail";
     }
 }

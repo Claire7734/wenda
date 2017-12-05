@@ -23,6 +23,10 @@ public class QuestionService {
     @Autowired
     SensitiveWordService sensitiveWordService;
 
+    public Question selectById(int questionId){
+        return questionDao.selectById(questionId);
+    }
+
     public int addQuestion(Question question) {
         //html过滤
         question.setContent(HtmlUtils.htmlEscape(question.getContent()));
