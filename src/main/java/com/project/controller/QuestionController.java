@@ -37,7 +37,7 @@ public class QuestionController {
             question.setCommentCount(0);
             if (hostHolder.getUser() == null) {
 //                question.setUserId(WendaUtil.ANONYMOUS_USERID);
-                return WendaUtil.getJSONString(999);
+                return WendaUtil.getJSONString(999); //前端默认跳转到登陆页面
             } else {
                 question.setUserId(hostHolder.getUser().getUserId());
             }

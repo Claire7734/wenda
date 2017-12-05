@@ -58,7 +58,7 @@ public class UserService {
         user = userDao.selectByName(user.getName());
 
         String ticket = addLoginTicket(user.getUserId());
-        map.put("ticket",ticket);
+        map.put("ticket", ticket);
 
         return map;
     }
@@ -85,7 +85,7 @@ public class UserService {
         }
 
         String ticket = addLoginTicket(user.getUserId());
-        map.put("ticket",ticket);
+        map.put("ticket", ticket);
         return map;
     }
 
@@ -99,8 +99,8 @@ public class UserService {
         return loginTicket.getTicket();
     }
 
-    public void logout(String ticket){
-        loginTicketDao.updateStatus(ticket,1);
+    public void logout(String ticket) {
+        loginTicketDao.updateStatus(ticket, 1);
     }
 
     public User getUser(int userId) {
