@@ -20,7 +20,7 @@ import java.util.Date;
  */
 @Controller
 public class QuestionController {
-    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
 
     @Autowired
     QuestionService questionService;

@@ -23,14 +23,14 @@ import java.util.UUID;
  */
 @Service
 public class UserService {
-    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     UserDao userDao;
     @Autowired
     LoginTicketDao loginTicketDao;
 
-    public static String INIT_HEAD = "/images/head.jpg";
+    public static String INIT_HEAD = "/images/avatar.jpg";
 
     int ticketValidTime = 3600 * 24 * 100;//ticket有效时间：100天（单位秒）
 

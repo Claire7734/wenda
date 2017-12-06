@@ -33,7 +33,7 @@ public class InitDatabaseTests {
         Random random = new Random();
         for (int i = 1; i < 10; i++) {
             User user = new User();
-            user.setHeadUrl(String.format("/images/head.jpg", i));
+            user.setHeadUrl(String.format("/images/avatar.jpg", i));
             user.setName(String.format("USER-%d", i));
             user.setPassword("xx1");
             user.setSalt("");

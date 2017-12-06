@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 public class WendaUtil {
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
-    public static int ANONYMOUS_USERID = 3;
+    public static int ANONYMOUS_USERID = 1;
 
     public static String INIT_HEAD = "/images/head.jpg";
 

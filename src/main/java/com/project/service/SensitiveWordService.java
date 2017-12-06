@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Service
 public class SensitiveWordService implements InitializingBean {
-    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(SensitiveWordService.class);
 
     @Override
     public void afterPropertiesSet() throws Exception {
