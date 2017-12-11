@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import com.project.dto.HostHolder;
+import com.project.dto.ViewObject;
 import com.project.model.Message;
 import com.project.model.User;
 import com.project.service.MessageService;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Claire on 12/11/17.
@@ -38,7 +41,22 @@ public class MessageController {
     }
 
     @RequestMapping(path = "/msg/detail", method = RequestMethod.GET)
-    public String getConversationDetail(Model model) {
+    public String getConversationDetail(Model model,
+                                        @RequestParam("conversationId") String conversationId) {
+
+        try {
+            List<Message> messageList = messageService.getConversationDetail(conversationId, 0, 10);
+            List<ViewObject> messages = new ArrayList<>();
+            for (Message message : messageList) {
+                ViewObject vo = new ViewObject();
+                vo.set("message", message);
+                vo.set("user", userService.getUserbyId(message.getFromId()));
+                messages.add(vo);
+            }
+            model.addAttribute("messages", messages);
+        } catch (Exception e) {
+            logger.error("获取详情失败" + e.getMessage());
+        }
         return "letterDetail";
     }
 
