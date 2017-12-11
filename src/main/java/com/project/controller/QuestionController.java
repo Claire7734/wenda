@@ -2,7 +2,11 @@ package com.project.controller;
 
 import com.project.aspect.LogAspect;
 import com.project.dto.HostHolder;
+import com.project.dto.ViewObject;
+import com.project.model.Comment;
+import com.project.model.EntityType;
 import com.project.model.Question;
+import com.project.service.CommentService;
 import com.project.service.QuestionService;
 import com.project.service.UserService;
 import com.project.util.WendaUtil;
@@ -13,7 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Claire on 12/4/17.
@@ -26,6 +32,8 @@ public class QuestionController {
     QuestionService questionService;
     @Autowired
     UserService userService;
+    @Autowired
+    CommentService commentService;
 
     @Autowired
     HostHolder hostHolder;
@@ -56,10 +64,19 @@ public class QuestionController {
 
     @RequestMapping("/question/{questionId}")
     public String questionDetail(@PathVariable int questionId,
-                                Model model) {
+                                 Model model) {
         Question question = questionService.selectById(questionId);
         model.addAttribute("question", question);
         model.addAttribute("user", userService.getUser(question.getUserId()));
+        List<Comment> commentList = commentService.getCommentByEntity(questionId, EntityType.ENTITY_QUESTION);
+        List<ViewObject> comments = new ArrayList<>();
+        for (Comment comment : commentList) {
+            ViewObject vo = new ViewObject();
+            vo.set("comment", comment);
+            vo.set("user", userService.getUser(comment.getUserId()));
+            comments.add(vo);
+        }
+        model.addAttribute("comments", comments);
         return "detail";
     }
 }

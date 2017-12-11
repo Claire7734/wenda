@@ -22,8 +22,9 @@ public class CommentService {
     @Autowired
     SensitiveWordService sensitiveWordService;
 
-    public List<Comment> getCommentByEntity(int entityId, int entityType, int offset, int limit) {
-        return commentDao.selectCommentByEntity(entityId, entityType, offset, limit);
+    //todo 分页
+    public List<Comment> getCommentByEntity(int entityId, int entityType) {
+        return commentDao.selectCommentByEntity(entityId, entityType);
     }
 
     public int addComment(Comment comment) {

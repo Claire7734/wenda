@@ -101,7 +101,7 @@
                                data-tip="p$t$yingxiaodao">
                                 <img src="$comment.user.headUrl"
                                      class="zm-list-avatar avatar"></a>
-                            <a class="author-link" target="_blank" href="/user/$comment.user.id">$comment.user.name</a>
+                            <a class="author-link" target="_blank" href="/user/$comment.user.userId">$comment.user.name</a>
                             </div>
                         <div class="zm-item-vote-info" data-votecount="28" data-za-module="VoteInfo">
                                 <span class="voters text">
@@ -139,7 +139,7 @@
             </div>
             <a name="draft"></a>
             <form action="/addComment" method="post" id="commentform">
-                <input type="hidden" name="questionId" value="$question.id"/>
+                <input type="hidden" name="questionId" value="$question.questionId"/>
             <div id="zh-question-answer-form-wrap" class="zh-question-answer-form-wrap">
                 <div class="zm-editable-editor-wrap" style="">
                     <div class="zm-editable-editor-outer">
