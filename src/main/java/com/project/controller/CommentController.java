@@ -4,6 +4,7 @@ import com.project.dto.HostHolder;
 import com.project.model.Comment;
 import com.project.model.EntityType;
 import com.project.service.CommentService;
+import com.project.service.QuestionService;
 import com.project.util.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,8 @@ public class CommentController {
     @Autowired
     CommentService commentService;
     @Autowired
+    QuestionService questionService;
+    @Autowired
     HostHolder hostHolder;
 
     @RequestMapping(path = "/addComment", method = RequestMethod.POST)
@@ -42,6 +45,8 @@ public class CommentController {
             comment.setEntityType(EntityType.ENTITY_QUESTION);
             comment.setEntityId(questionId);
             commentService.addComment(comment);
+            int count = commentService.getCommentCount(comment.getEntityId(), comment.getEntityType());
+            questionService.updateCommentCount(comment.getEntityId(), count);//todo 变为事务
         } catch (Exception e) {
             logger.error("增加评论失败" + e.getMessage());
         }

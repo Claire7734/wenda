@@ -3,6 +3,7 @@ package com.project.service;
 import com.project.aspect.LogAspect;
 import com.project.dao.QuestionDao;
 import com.project.model.Question;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class QuestionService {
     @Autowired
     SensitiveWordService sensitiveWordService;
 
-    public Question selectById(int questionId){
+    public Question selectById(int questionId) {
         return questionDao.selectById(questionId);
     }
 
@@ -41,5 +42,9 @@ public class QuestionService {
 
     public List<Question> getLatestQuestions(int userId, int offset, int limit) {
         return questionDao.selectLatestQuestions(userId, offset, limit);
+    }
+
+    public void updateCommentCount(@Param("questionId") int questionId,@Param("commentCount") int commentCount) {
+        questionDao.updateCommentCount(questionId, commentCount);
     }
 }
