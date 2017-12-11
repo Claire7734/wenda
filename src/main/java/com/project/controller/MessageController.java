@@ -36,7 +36,27 @@ public class MessageController {
     UserService userService;
 
     @RequestMapping(path = "/msg/list", method = RequestMethod.GET)
-    public String getConversationList() {
+    public String getConversationList(Model model) {
+        try {
+            if (hostHolder.getUser() == null) {
+                return "redirect:/reglogin";
+            }
+            int localUserId = hostHolder.getUser().getUserId();
+            List<Message> conversationList = messageService.getConversationList(localUserId, 0, 10);
+            List<ViewObject> conversations = new ArrayList<>();
+            for (Message message : conversationList) {
+                ViewObject vo = new ViewObject();
+                vo.set("message", message);
+                int targetId = message.getFromId() == localUserId ? message.getToId() : message.getFromId();
+                vo.set("user", userService.getUserbyId(targetId));
+                vo.set("unread", messageService.getConversationUnreadCount(localUserId, message.getConversationId()));
+                //todo 点进去后吧has_read标记为1，即已读
+                conversations.add(vo);
+            }
+            model.addAttribute("conversations", conversations);
+        } catch (Exception e) {
+            logger.error("获取对话列表失败" + e.getMessage());
+        }
         return "letter";
     }
 

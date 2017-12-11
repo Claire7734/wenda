@@ -19,6 +19,10 @@ public class MessageService {
     @Autowired
     SensitiveWordService sensitiveWordService;
 
+    public int getConversationUnreadCount(int userId, String conversationId) {
+        return messageDao.getConversationUnreadCount(userId, conversationId);
+    }
+
     public int addMessage(Message message) {
         message.setContent(sensitiveWordService.filter(message.getContent()));
         return messageDao.addMessage(message) > 0 ? message.getMessageId() : 0;//todo 为什么message的id被更新了？？？
@@ -26,5 +30,9 @@ public class MessageService {
 
     public List<Message> getConversationDetail(String conversationId, int offset, int limit) {
         return messageDao.getConversationDetail(conversationId, offset, limit);
+    }
+
+    public List<Message> getConversationList(int userId, int offset, int limit) {
+        return messageDao.getConversationList(userId, offset, limit);
     }
 }

@@ -13,7 +13,7 @@ public class Message {
     private String content;
     private String conversationId;
     private Date createdDate;
-    private int hasRead;
+    private int hasRead; //默认0，未读；1，已读
 
     public int getHasRead() {
         return hasRead;
