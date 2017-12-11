@@ -67,13 +67,13 @@ public class QuestionController {
                                  Model model) {
         Question question = questionService.selectById(questionId);
         model.addAttribute("question", question);
-        model.addAttribute("user", userService.getUser(question.getUserId()));
+        model.addAttribute("user", userService.getUserbyId(question.getUserId()));
         List<Comment> commentList = commentService.getCommentByEntity(questionId, EntityType.ENTITY_QUESTION);
         List<ViewObject> comments = new ArrayList<>();
         for (Comment comment : commentList) {
             ViewObject vo = new ViewObject();
             vo.set("comment", comment);
-            vo.set("user", userService.getUser(comment.getUserId()));
+            vo.set("user", userService.getUserbyId(comment.getUserId()));
             comments.add(vo);
         }
         model.addAttribute("comments", comments);

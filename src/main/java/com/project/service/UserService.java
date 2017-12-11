@@ -103,8 +103,12 @@ public class UserService {
         loginTicketDao.updateStatus(ticket, 1);
     }
 
-    public User getUser(int userId) {
+    public User getUserbyId(int userId) {
         return userDao.selectById(userId);
+    }
+
+    public User getUserbyName(String userName){
+        return userDao.selectByName(userName);
     }
 
     private String getMD5(String psd, String salt) {

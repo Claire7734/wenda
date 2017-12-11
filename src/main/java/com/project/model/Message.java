@@ -11,8 +11,17 @@ public class Message {
     private int fromId;
     private int toId;
     private String content;
-    private int conversationId;
+    private String conversationId;
     private Date createdDate;
+    private int hasRead;
+
+    public int getHasRead() {
+        return hasRead;
+    }
+
+    public void setHasRead(int hasRead) {
+        this.hasRead = hasRead;
+    }
 
     public int getMessageId() {
         return messageId;
@@ -46,11 +55,14 @@ public class Message {
         this.content = content;
     }
 
-    public int getConversationId() {
-        return conversationId;
+    public String getConversationId() {
+        if (fromId < toId)
+            return String.format("%d_%d", fromId, toId);
+        else
+            return String.format("%d_%d", toId, fromId);
     }
 
-    public void setConversationId(int conversationId) {
+    public void setConversationId(String conversationId) {
         this.conversationId = conversationId;
     }
 

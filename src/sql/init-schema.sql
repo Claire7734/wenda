@@ -51,3 +51,18 @@ CREATE TABLE `comment` (
   INDEX `date_index` (`created_date` ASC)
 )ENGINE=INNODB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message` (
+  `message_id` INT NOT NULL AUTO_INCREMENT,
+  `from_id` INT NOT NULL,
+  `to_id` INT NOT NULL,
+  `content` TEXT NULL,
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `has_read` INT NOT NULL DEFAULT 0,
+  `conversation_id` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`message_id`),
+  INDEX `date_index` (`created_date` ASC),
+  INDEX `conversation_index` (`conversation_id` ASC)
+)ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+
