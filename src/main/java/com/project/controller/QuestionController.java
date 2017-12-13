@@ -6,7 +6,9 @@ import com.project.dto.ViewObject;
 import com.project.model.Comment;
 import com.project.model.EntityType;
 import com.project.model.Question;
+import com.project.model.User;
 import com.project.service.CommentService;
+import com.project.service.LikeService;
 import com.project.service.QuestionService;
 import com.project.service.UserService;
 import com.project.util.WendaUtil;
@@ -34,6 +36,8 @@ public class QuestionController {
     UserService userService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    LikeService likeService;
 
     @Autowired
     HostHolder hostHolder;
@@ -68,12 +72,20 @@ public class QuestionController {
         Question question = questionService.selectById(questionId);
         model.addAttribute("question", question);
         model.addAttribute("user", userService.getUserbyId(question.getUserId()));
+
+        User currentUser = hostHolder.getUser();
         List<Comment> commentList = commentService.getCommentByEntity(questionId, EntityType.ENTITY_QUESTION);
         List<ViewObject> comments = new ArrayList<>();
         for (Comment comment : commentList) {
             ViewObject vo = new ViewObject();
             vo.set("comment", comment);
             vo.set("user", userService.getUserbyId(comment.getUserId()));
+            if (currentUser == null) {
+                vo.set("liked", 0);
+            } else {
+                vo.set("liked", likeService.getLikeStatus(currentUser.getUserId(), EntityType.ENTITY_COMMENT, comment.getCommentId()));
+            }
+            vo.set("likeCount", likeService.getLikeCount(EntityType.ENTITY_COMMENT, comment.getCommentId()));
             comments.add(vo);
         }
         model.addAttribute("comments", comments);
