@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.List;
+
 /**
  * Created by Claire on 12/13/17.
  */
@@ -21,13 +23,49 @@ public class JedisAdapter implements InitializingBean {
         jedisPool = new JedisPool("redis://localhost:6379/10");
     }
 
+
+    //队列操作
+    //取元素，如果队列中没有则阻塞
+    public List<String> brpop(int timeout, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.brpop(timeout, key);
+        } catch (Exception e) {
+            logger.error("Redis发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    public long lpush(String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.lpush(key, value);
+        } catch (Exception e) {
+            logger.error("Redis发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+
+
+    //集合操作
     public long sadd(String key, String value) {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
             return jedis.sadd(key, value);
         } catch (Exception e) {
-            logger.error("redis发生异常", e.getMessage());
+            logger.error("Redis发生异常", e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -42,7 +80,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = jedisPool.getResource();
             return jedis.srem(key, value);
         } catch (Exception e) {
-            logger.error("redis发生异常", e.getMessage());
+            logger.error("Redis发生异常", e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -58,7 +96,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = jedisPool.getResource();
             return jedis.scard(key);
         } catch (Exception e) {
-            logger.error("redis发生异常", e.getMessage());
+            logger.error("Redis发生异常", e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -74,7 +112,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = jedisPool.getResource();
             return jedis.sismember(key, value);
         } catch (Exception e) {
-            logger.error("redis发生异常", e.getMessage());
+            logger.error("Redis发生异常", e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();

@@ -1,9 +1,15 @@
 package com.project.controller;
 
+import com.project.async.EventModel;
+import com.project.async.EventProducer;
+import com.project.async.EventType;
 import com.project.dto.HostHolder;
+import com.project.model.Comment;
 import com.project.model.EntityType;
 import com.project.model.User;
+import com.project.service.CommentService;
 import com.project.service.LikeService;
+import com.project.service.UserService;
 import com.project.util.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +31,30 @@ public class LikeController {
     LikeService likeService;
     @Autowired
     HostHolder hostHolder;
+    @Autowired
+    EventProducer eventProducer;
+    @Autowired
+    CommentService commentService;
+
+
+    @Autowired
+    UserService userService;
 
     @RequestMapping(path = "/like", method = RequestMethod.POST)
     @ResponseBody
     public String like(@RequestParam("commentId") int commentId) {
         User user = hostHolder.getUser();
         if (user == null) {
-            return WendaUtil.getJSONString(999);
+            user = userService.getUserbyId(10);
+//            return WendaUtil.getJSONString(999);
         }
+
+        Comment comment = commentService.getCommentById(commentId);
+        eventProducer.fireEvent(new EventModel(EventType.LIKE).setActorId(user.getUserId())
+                .setEntityId(EntityType.ENTITY_COMMENT).setEntityId(commentId)
+                .setEntityOwnerId(comment.getUserId())
+                .setExt("questionId", String.valueOf(comment.getEntityId())));
+
         long likeCount = likeService.like(user.getUserId(), EntityType.ENTITY_COMMENT, commentId);
         return WendaUtil.getJSONString(0, String.valueOf(likeCount));
     }
