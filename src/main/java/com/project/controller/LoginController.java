@@ -1,6 +1,9 @@
 package com.project.controller;
 
 import com.project.aspect.LogAspect;
+import com.project.async.EventModel;
+import com.project.async.EventProducer;
+import com.project.async.EventType;
 import com.project.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -27,6 +30,8 @@ public class LoginController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    EventProducer eventProducer;
 
     @RequestMapping(path = "/reg", method = RequestMethod.POST)
     public String register(Model model,
@@ -63,9 +68,19 @@ public class LoginController {
         try {
             Map<String, String> map = userService.login(username, password);
             if (map.containsKey("ticket")) {
-                Cookie cookie = new Cookie("ticket", map.get("ticket"));
+                Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");
+                if (rememberme){
+                    cookie.setMaxAge(3600*24*5);
+                }
                 response.addCookie(cookie);
+
+                eventProducer.fireEvent(new EventModel(EventType.LOGIN)
+                        .setExt("username",username).setExt("email","userEmail")
+                        .setActorId(Integer.valueOf(map.get("userId"))));
+                //todo 建数据库时user要加入email信息
+
+
                 if (StringUtils.isNotBlank(next))
                     return "redirect:" + next;
                 return "redirect:/";
