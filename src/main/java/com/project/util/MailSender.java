@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import java.util.Map;
+import java.util.Properties;
 
 
 /**
  * Created by Claire on 12/14/17.
  */
-@Service
-public class MailSender implements InitializingBean{
+//@Service
+public class MailSender implements InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(MailSender.class);
     private JavaMailSenderImpl mailSender;
 
@@ -49,6 +50,18 @@ public class MailSender implements InitializingBean{
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        mailSender = new JavaMailSenderImpl();
+        mailSender.setUsername("course@nowcoder.com");
+        mailSender.setPassword("NKnk123");
+        mailSender.setHost("smtp.exmail.qq.com");
+        //mailSender.setHost("smtp.qq.com");
+        mailSender.setPort(465);
+        mailSender.setProtocol("smtps");
+        mailSender.setDefaultEncoding("utf8");
+        Properties javaMailProperties = new Properties();
+        javaMailProperties.put("mail.smtp.ssl.enable", true);
+        //javaMailProperties.put("mail.smtp.auth", true);
+        //javaMailProperties.put("mail.smtp.starttls.enable", true);
+        mailSender.setJavaMailProperties(javaMailProperties);
     }
 }
