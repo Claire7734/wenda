@@ -30,8 +30,6 @@ public class UserService {
     @Autowired
     LoginTicketDao loginTicketDao;
 
-    public static String INIT_HEAD = "/images/avatar.jpg";
-
     int ticketValidTime = 3600 * 24 * 100;//ticket有效时间：100天（单位秒）
 
     public Map<String, String> register(String username, String password) {
@@ -53,7 +51,7 @@ public class UserService {
         String salt = UUID.randomUUID().toString().substring(0, 5);
         user.setSalt(salt);
         user.setPassword(getMD5(password, salt));
-        user.setHeadUrl(INIT_HEAD);
+        user.setHeadUrl(WendaUtil.INIT_HEAD);
         userDao.addUser(user);
         user = userDao.selectByName(user.getName());
 
@@ -107,7 +105,7 @@ public class UserService {
         return userDao.selectById(userId);
     }
 
-    public User getUserbyName(String userName){
+    public User getUserbyName(String userName) {
         return userDao.selectByName(userName);
     }
 
