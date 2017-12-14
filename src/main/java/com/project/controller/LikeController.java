@@ -45,8 +45,8 @@ public class LikeController {
     public String like(@RequestParam("commentId") int commentId) {
         User user = hostHolder.getUser();
         if (user == null) {
-            user = userService.getUserbyId(10);
-//            return WendaUtil.getJSONString(999);
+//            user = userService.getUserbyId(10);
+            return WendaUtil.getJSONString(999);
         }
 
         Comment comment = commentService.getCommentById(commentId);
