@@ -6,8 +6,11 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Transaction;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Claire on 12/13/17.
@@ -55,7 +58,6 @@ public class JedisAdapter implements InitializingBean {
         }
         return 0;
     }
-
 
 
     //集合操作
@@ -119,5 +121,133 @@ public class JedisAdapter implements InitializingBean {
             }
         }
         return false;
+    }
+
+    public Jedis getJedis() {
+        return jedisPool.getResource();
+    }
+
+    //开启事务
+    public Transaction multi(Jedis jedis) {
+        try {
+            return jedis.multi();
+        } catch (Exception e) {
+            logger.error("Redis发生异常" + e.getMessage());
+        }
+        return null;
+    }
+
+    public List<Object> exec(Transaction tx, Jedis jedis) {
+        try {
+            return tx.exec();
+        } catch (Exception e) {
+            logger.error("Redis发生异常" + e.getMessage());
+        } finally {
+            if (tx != null) {
+                try {
+                    tx.close();
+                } catch (IOException ioe) {
+                    logger.error("Redis发生异常" + ioe.getMessage());
+                }
+            }
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    //加入集合
+    public long zadd(String key, double score, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.zadd(key, score, value);
+        } catch (Exception e) {
+            logger.error("Redis发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public long zrem(String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.zrem(key, value);
+        } catch (Exception e) {
+            logger.error("Redis发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    //获取集合
+    public Set<String> zrange(String key, int start, int end) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.zrange(key, start, end);
+        } catch (Exception e) {
+            logger.error("Redis发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    //获取反向集合
+    public Set<String> zrevrange(String key, int start, int end) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.zrevrange(key, start, end);
+        } catch (Exception e) {
+            logger.error("Redis发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    //队列元素个数
+    public long zcard(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.zcard(key);
+        } catch (Exception e) {
+            logger.error("Redis发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public Double zscore(String key, String member) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.zscore(key, member);
+        } catch (Exception e) {
+            logger.error("Redis发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
     }
 }

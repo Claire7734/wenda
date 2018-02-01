@@ -1,8 +1,10 @@
 import com.project.WendaApplication;
 import com.project.dao.QuestionDao;
 import com.project.dao.UserDao;
+import com.project.model.EntityType;
 import com.project.model.Question;
 import com.project.model.User;
+import com.project.service.FollowService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +30,9 @@ public class InitDatabaseTests {
     @Autowired
     QuestionDao questionDao;
 
+    @Autowired
+    FollowService followService;
+
     @Test
     public void initDatabase() {
         Random random = new Random();
@@ -44,18 +49,22 @@ public class InitDatabaseTests {
             user.setPassword("xx2222");
             int a = userDao.updatePassword(user);
 
+            //相互关注
+            for (int j = 1; j < i; j++) {
+                followService.follow(j, EntityType.ENTITY_USER, i);
+            }
+
             Question question = new Question();
             question.setCommentCount(0);
             Date date = new Date();
-            date.setTime(date.getTime() + 1000*3600*i);
+            date.setTime(date.getTime() + 1000 * 3600 * i);
             question.setCreatedDate(date);
             question.setUserId(user.getUserId());
-            question.setTitle(String.format("TITLE{%d}",i));
-            question.setContent(String.format("balabala content %d",i));
+            question.setTitle(String.format("TITLE{%d}", i));
+            question.setContent(String.format("balabala content %d", i));
             questionDao.addQuestion(question);
-            System.out.println(questionDao.selectLatestQuestions(user.getUserId(),0,10));
+            System.out.println(questionDao.selectLatestQuestions(user.getUserId(), 0, 10));
         }
-
 
 
 //        Assert.assertEquals("xx1",userDao.selectById(1).getPassword());
