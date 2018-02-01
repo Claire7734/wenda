@@ -33,6 +33,7 @@ public class InitDatabaseTests {
     @Autowired
     FollowService followService;
 
+
     @Test
     public void initDatabase() {
         Random random = new Random();

@@ -127,22 +127,9 @@ public class FollowController {
                 .setEntityType(EntityType.ENTITY_QUESTION).setEntityOwnerId(q.getUserId()));
 
         Map<String, Object> info = new HashMap<>();
-        info.put("headUrl", hostHolder.getUser().getHeadUrl());
-        info.put("name", hostHolder.getUser().getName());
         info.put("id", hostHolder.getUser().getUserId());
         info.put("count", followService.getFolloweeCount(EntityType.ENTITY_QUESTION, questionId));
         return WendaUtil.getJSONString(ret ? 0 : 1, info);
-    }
-
-    @RequestMapping(path = "/user/{userId}/followees", method = RequestMethod.GET)
-    public String followees(@PathVariable("userId") int userId, Model model) {
-        List<Integer> followeeIds = followService.getFollowees(userId, EntityType.ENTITY_USER, 0, 10);//todo 分页
-        if (hostHolder.getUser() != null) {
-            model.addAttribute("followees", getUsersInfo(hostHolder.getUser().getUserId(), followeeIds));
-        } else {
-            model.addAttribute("followees", getUsersInfo(0, followeeIds));
-        }
-        return "followees";
     }
 
     @RequestMapping(path = "/user/{userId}/followers", method = RequestMethod.GET)
@@ -153,7 +140,22 @@ public class FollowController {
         } else {
             model.addAttribute("followers", getUsersInfo(0, followerIds));
         }
+        model.addAttribute("followerCount", followService.getFollowerCount(EntityType.ENTITY_USER, userId));
+        model.addAttribute("curUser", userService.getUserbyId(userId));
         return "followers";
+    }
+
+    @RequestMapping(path = "/user/{userId}/followees", method = RequestMethod.GET)
+    public String followees(@PathVariable("userId") int userId, Model model) {
+        List<Integer> followeeIds = followService.getFollowees(userId, EntityType.ENTITY_USER, 0, 10);//todo 分页
+        if (hostHolder.getUser() != null) {
+            model.addAttribute("followees", getUsersInfo(hostHolder.getUser().getUserId(), followeeIds));
+        } else {
+            model.addAttribute("followees", getUsersInfo(0, followeeIds));
+        }
+        model.addAttribute("followeeCount", followService.getFollowerCount(userId, EntityType.ENTITY_USER));
+        model.addAttribute("curUser", userService.getUserbyId(userId));
+        return "followees";
     }
 
     private List<ViewObject> getUsersInfo(int localUserId, List<Integer> userIds) {
@@ -165,7 +167,7 @@ public class FollowController {
 
             ViewObject vo = new ViewObject();
             vo.set("user", user);
-//            vo.set("commentCount",commentService.getCommentCount()); todo
+            vo.set("commentCount",commentService.getUserCommentCount(uid));
             vo.set("followerCount", followService.getFollowerCount(EntityType.ENTITY_USER, uid));
             vo.set("followeeCount", followService.getFolloweeCount(uid, EntityType.ENTITY_USER));
             if (localUserId != 0) { //是否登录
